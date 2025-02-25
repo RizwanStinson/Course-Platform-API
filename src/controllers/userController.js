@@ -2,6 +2,17 @@ import User from "../models/user.js";
 import Course from "../models/course.js";
 import cloudinary from "../config/cloudinary.js";
 
+
+export const getAllUser = async (req, res) => {
+  try {
+    const users = await User.find({ email: { $ne: "abc@admin.com" } });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)

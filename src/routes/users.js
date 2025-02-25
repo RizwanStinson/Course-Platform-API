@@ -2,6 +2,7 @@ import express from "express";
 import { auth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
 import {
+  getAllUser,
   getUserProfile,
   updateUserProfile,
   getFavorites,
@@ -13,6 +14,7 @@ import {
 
 const router = express.Router();
 
+router.get("/all-profile", getAllUser)
 router.get("/profile/:id", auth, getUserProfile);
 router.put("/profile/:id", auth, upload.single("image"), updateUserProfile);
 router.get("/favorites/:id", auth, getFavorites);
