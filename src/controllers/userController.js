@@ -141,3 +141,26 @@ export const enrollCourse = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const getCourseEnrollmentCounts = async (req, res) => {
+  try {
+    const courses = await Course.find({}, "_id title"); // Fetch all courses with only ID and title
+    const courseEnrollmentCounts = [];
+
+    for (const course of courses) {
+      const enrollmentCount = await User.countDocuments({
+        enrolledCourses: course._id,
+      });
+      courseEnrollmentCounts.push({
+        courseId: course._id,
+        title: course.title,
+        enrollmentCount,
+      });
+    }
+
+    res.status(200).json(courseEnrollmentCounts);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

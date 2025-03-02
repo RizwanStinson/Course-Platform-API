@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: "/placeholder.svg",
+      default: null,
     },
     enrolledCourses: [
       {
