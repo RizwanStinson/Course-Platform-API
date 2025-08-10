@@ -22,23 +22,73 @@ export const getCourse = async (req, res) => {
   }
 };
 
+// export const createCourse = async (req, res) => {
+//   try {
+//     const { title, description, price, category, instructor, categoryId } =
+//       req.body;
+//     let imageUrl;
+//     let pdfUrl;
+
+//     if (req.file) {
+//       const b64 = Buffer.from(req.file.buffer).toString("base64");
+//       const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+//       const result = await cloudinary.uploader.upload(dataURI);
+//       imageUrl = result.secure_url;
+//     }
+
+//     const course = new Course({
+//       title,
+//       description,
+//       image: imageUrl,
+//       price,
+//       category,
+//       instructor,
+//       categoryId,
+//     });
+
+//     await course.save();
+
+//     res.status(201).json({
+//       message: "Course added successfully",
+//       course,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
 export const createCourse = async (req, res) => {
   try {
     const { title, description, price, category, instructor, categoryId } =
       req.body;
-    let imageUrl;
 
-    if (req.file) {
-      const b64 = Buffer.from(req.file.buffer).toString("base64");
-      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+    let imageUrl;
+    let pdfUrl;
+
+    // Upload Image
+    if (req.files?.image) {
+      const b64 = Buffer.from(req.files.image[0].buffer).toString("base64");
+      const dataURI = `data:${req.files.image[0].mimetype};base64,${b64}`;
       const result = await cloudinary.uploader.upload(dataURI);
       imageUrl = result.secure_url;
+    }
+
+    // Upload PDF
+    if (req.files?.pdf) {
+      const b64 = Buffer.from(req.files.pdf[0].buffer).toString("base64");
+      const dataURI = `data:${req.files.pdf[0].mimetype};base64,${b64}`;
+      const result = await cloudinary.uploader.upload(dataURI, {
+        resource_type: "raw", // Needed for non-image files
+      });
+      pdfUrl = result.secure_url;
     }
 
     const course = new Course({
       title,
       description,
       image: imageUrl,
+      pdf: pdfUrl, // Add PDF field in your schema
       price,
       category,
       instructor,
@@ -52,6 +102,7 @@ export const createCourse = async (req, res) => {
       course,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };

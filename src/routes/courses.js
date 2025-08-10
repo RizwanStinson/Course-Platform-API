@@ -13,7 +13,18 @@ const router = express.Router();
 
 router.get("/", getAllCourses);
 router.get("/:id", getCourse);
-router.post("/new", adminAuth, upload.single("image"), createCourse);
+// router.post("/new", adminAuth, upload.single("image"), createCourse);
+// routes/courses.js
+router.post(
+  "/new",
+  adminAuth,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "pdf", maxCount: 1 }
+  ]),
+  createCourse
+);
+
 router.put("/update/:id", adminAuth, upload.single("image"), updateCourse);
 router.delete("/delete/:id", adminAuth, deleteCourse);
 

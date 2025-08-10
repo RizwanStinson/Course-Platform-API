@@ -15,6 +15,10 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    pdf: {
+      type: String, // stores Cloudinary PDF URL
+      required: false, // PDF might be optional
+    },
     price: {
       type: Number,
       required: true,
